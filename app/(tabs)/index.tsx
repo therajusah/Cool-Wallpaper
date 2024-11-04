@@ -1,12 +1,11 @@
 import { ImageCard } from "@/components/ImageCard";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedView } from "@/components/ThemedView";
 import { useWallpaper, Wallpaper } from "@/hooks/userWallpaper";
 import { Link } from "expo-router";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// https://ideogram.ai/assets/progressive-image/balanced/response/Q-C0J7HHQTuVP-4qbOhGqw
-// https://ideogram.ai/g/F5r6bdqxQK2WqZMCZHw0cA/3
 
 export default function explore() {
   const wallpapers = useWallpaper();
@@ -15,12 +14,31 @@ export default function explore() {
       <ParallaxScrollView headerBackgroundColor={{ dark: "black", light: "white" }}
         headerImage={<Image style={{ flex: 1 }} source={{ uri: wallpapers[0]?.url ?? "" }} />}
       >
-        <View style={styles.container}>
-          {wallpapers.map((w: Wallpaper) => <ImageCard wallpaper={w} />)}
-        </View>
-        <View style={styles.container}>
-          {wallpapers.map((w: Wallpaper) => <ImageCard wallpaper={w} />)}
-        </View>
+        <ThemedView style={styles.container
+        }>
+          <ThemedView style={styles.innerContainer}>
+            <FlatList
+              data={wallpapers}
+
+              renderItem={({ item }) => <View style={styles.imageContainer}><ImageCard wallpaper={item} /></View>}
+
+
+              keyExtractor={item => item.name}
+
+            />
+          </ThemedView>
+          <ThemedView style={styles.innerContainer}>
+            <FlatList
+              data={wallpapers}
+
+              renderItem={({ item }) => <View style={styles.imageContainer}><ImageCard wallpaper={item} /></View>}
+
+
+              keyExtractor={item => item.name}
+
+            />
+          </ThemedView>
+        </ThemedView>
 
 
       </ParallaxScrollView>
@@ -33,6 +51,15 @@ export default function explore() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.5,
+    flexDirection: "row",
+    flex: 1,
+  },
+  innerContainer: {
+    flex: 1,
+    padding: 10
+  },
+  imageContainer: {
+    paddingVertical: 10
+
   }
 }) 

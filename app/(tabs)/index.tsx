@@ -1,14 +1,10 @@
-import { ImageCard } from "@/components/ImageCard";
+
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedView } from "@/components/ThemedView";
 import { useWallpaper, Wallpaper } from "@/hooks/userWallpaper";
-import { Link } from "expo-router";
-import Text from "expo";
 import { View, Image, StyleSheet } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
-import { DownloadPicture } from "@/components/BottomSheet";
+import { SplitView } from "@/components/SplitView";
 
 export default function explore() {
   const wallpapers = useWallpaper();
@@ -26,39 +22,8 @@ export default function explore() {
           />
         }
       >
-        <ThemedView style={styles.container}>
-          <ThemedView style={styles.innerContainer}>
-            <FlatList
-              data={wallpapers.filter((_, index) => index % 2 === 0)}
-              renderItem={({ item }) => (
-                <View style={styles.imageContainer}>
-                  <ImageCard
-                    wallpaper={item}
-                    onPress={() => {
-                      setSelectedWallpaper(item);
-                    }}
-                  />
-                </View>
-              )}
-              keyExtractor={(item) => item.name}
-            />
-          </ThemedView>
-          <ThemedView style={styles.innerContainer}>
-            <FlatList
-              data={wallpapers.filter((_, index) => index % 2 === 1)}
-              renderItem={({ item }) => (
-                <View style={styles.imageContainer}>
-                  <ImageCard wallpaper={item} onPress={() => {
-                      setSelectedWallpaper(item);
-                  }} />
-                </View>
-              )}
-              keyExtractor={(item) => item.name}
-            />
-          </ThemedView>
-        </ThemedView>
+        <SplitView wallpapers={wallpapers} />
       </ParallaxScrollView>
-      {selectedWallpaper && <DownloadPicture wallpaper={selectedWallpaper} onClose={() => setSelectedWallpaper(null)} />}
     </SafeAreaView>
   );
 }
